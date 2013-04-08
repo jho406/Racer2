@@ -1,0 +1,56 @@
+<table class="racer_table">
+  <tr id="player1_strip" data-player_id="<%=@game.players.first.id%>">
+    <td class="active"></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr id="player2_strip" data-player_id="<%=@game.players.last.id%>">
+    <td class="active"></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<nav>
+  <span id="msg">hellooooo</span>
+  <form action="/" method="post">
+    <input type="hidden" name="player1" value="<%=@game.players.first.initials%>" >
+    <input type="hidden" name="player2" value="<%=@game.players.last.initials%>" >
+    <button type="submit">new game!</button>
+  </form>
+  <a href="/game/<%=@game.id%>/results">Results</a>
+  <a href="/">Home</a>
+
+</nav>

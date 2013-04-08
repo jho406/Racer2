@@ -1,0 +1,10 @@
+class CreatePlayers < ActiveRecord::Migration
+  def change
+    create_table :players do |t|
+      t.string :initials
+      t.timestamps
+    end
+
+    add_index(:players, :initials, :unique => true)
+  end
+end

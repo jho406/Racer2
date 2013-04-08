@@ -1,0 +1,7 @@
+<h1>game_id: <%=@game.id%></h1>
+<table>
+<tr><th>Time Started</th><th>Time Finished</th><th>Player</th><th>Won?</th></tr>
+<% @results.each do |result| %>
+<tr><th><%=@game.created_at%></th><th><%=@game.updated_at%></th><th><%=result.player.initials %></th><th><%=result.won%></th></tr>
+<%end%>
+</table>
