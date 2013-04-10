@@ -21,7 +21,7 @@ get '/game/:id' do
 end
 
 put '/game/:id' do
-  player = Player.find(params["winner_id"])
+  player = Player.find_by_initials(params["winner_name"])
   player.win!(params[:id])
 end
 

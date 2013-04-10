@@ -1,49 +1,97 @@
 $(document).ready(function() {
-  var game_over = false;
 
-  function movePlayerByOne(player_id){
-    if (game_over) return;
-    var player = $('#player'+player_id+'_strip').find('.active');
-    player.removeClass('active');
-    var nextElement = player.next();
+  function Player(name){
+    this.name = name;
+    this.current_position = 0
+  };
 
-    if (nextElement.length === 0){
-      var db_id = $('#player'+player_id+'_strip').attr("data-player_id")
-      game_over = true;
-      // post to app that someone won
-      $.ajax({
-        url: document.URL,
-        type: "put",
-        data:{
-          "winner_id": db_id
-        }
-      }).done(function(){
-        $('#msg').text("player "+player_id+' WON!!!!');
-        $('nav').css('display','block');
-      });
-    }else{
-      nextElement.addClass('active');
-    }
+  Player.prototype.advance = function() {
+    this.current_position+=1;
+  };
+
+  function Game(player1, player2){
+    this.player1 = player1;
+    this.player2 = player2;
+    this.track_size = 19;
+    this.seconds_played = 0;
+    this.start_time = (new Date).getTime()
 
   };
 
+  Game.prototype.over = function(){
 
-  $('button').on('click', function(event){
-      // post to app for a new game for the current players[session]
+    if (this.player1.current_position >= this.track_size){
+      this.seconds_played = ((new Date).getTime() - this.start_time)/1000; 
+      this.winner = player1;
+      this.finish();
+      return true;
+    };
 
-    $('nav').css('display','none');
-    $('td').removeClass('active');
-    $('tr > td:first-child').addClass('active');
-    game_over=false
-  });
+    if (this.player2.current_position >= this.track_size){
+      this.seconds_played = ((new Date).getTime() - this.start_time)/1000; 
+      this.winner = player2;
+      this.finish();
+      return true;
+    };
+
+    return false;
+
+
+  };
+
+  Game.prototype.onKeyUp = function(key){
+    if (this.over() === false){ 
+      if (key === 32) {
+        player1.advance();
+        this.render();
+      };
+      if (key === 13) {
+        player2.advance();
+        this.render(); 
+      };
+    };
+  };
+/*********************************************/
+  Game.prototype.finish = function() {
+    $.ajax({
+        url: document.URL,
+        type: "put",
+        data:{
+          "winner_name": this.winner.name
+        }
+      }).done(function(){
+        $('#msg').text("player "+this.winner.name+' WON!!!!');
+        $('nav').css('display','block');
+      });
+  };
+/*********************************************/
+
+  Game.prototype.render = function() {
+    $('td').removeClass('active')
+    pos1 = this.player1.current_position + 1;
+    $( '#player1_strip td:nth-child(' + pos1 +')' ).addClass('active');
+
+    pos2 = this.player2.current_position + 1;
+    $( '#player2_strip td:nth-child(' + pos2 +')' ).addClass('active');
+
+    if (this.over()){
+      $('#msg').text("player "+this.winner.name+' WON!!!!');
+      $('nav').css('display','block');
+    }
+  };
+
+  p1_name = $('#player1_strip').attr('data-player_name')
+  p2_name = $('#player1_strip').attr('data-player_name')
+  player1 = new Player(p1_name);
+  player2 = new Player(p2_name);
+
+  game = new Game(player1, player2);
+  game.render();
 
   $(document).on('keyup', function(event) {
-
-    if (event.keyCode == 32) {
-      movePlayerByOne(1); 
-    };
-    if (event.keyCode == 13) {
-      movePlayerByOne(2); 
-    };
+    game.onKeyUp(event.which);
   });
+
+
+
 });
